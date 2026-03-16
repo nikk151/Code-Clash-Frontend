@@ -16,9 +16,20 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
+# OS files
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Env files
+.env
+*.local
+
+# Vite
+dist
+dist-ssr
+*.tsbuildinfo
