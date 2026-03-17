@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -10,6 +11,8 @@ import Stats from '../components/landing/Stats';
 import CTA from '../components/landing/CTA';
 
 function LandingPage() {
+
+  const [serverStatus, setServerStatus] = useState("connecting...")
   const landingHeaderLeft = (
     <Link to="/" className="flex items-center gap-3 group cursor-pointer">
       <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-[0_0_15px_rgba(67,70,239,0.5)] group-hover:scale-105 transition-transform">
@@ -18,6 +21,14 @@ function LandingPage() {
       <h2 className="text-white text-xl font-black tracking-tighter uppercase">Code Clash</h2>
     </Link>
   );
+
+  useEffect( ()=>{
+    const data = async()=>{
+      const data = await fetch('http://localhost:8000/api/health')
+      setServerStatus((await data.json()).message)
+    }
+    data()
+  },[])
 
   const landingHeaderRight = (
     <div className="flex flex-1 justify-end gap-8 items-center">

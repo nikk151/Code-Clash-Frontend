@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
@@ -9,6 +9,18 @@ import ProblemTable from '../components/problems/ProblemTable';
 import { Link } from 'react-router-dom';
 
 function ProblemsPage() {
+  
+  const [problems, setProblems] = useState(null)
+
+  useEffect(()=>{
+    const problemData = async ()=>{
+      const response = await fetch("http://localhost:8000/api/problems/get-all-problems")
+      const data = await response.json()
+      setProblems(data.problems)
+    }
+    problemData()
+  },[])
+  
   const headerLeft = (
     <Link to="/" className="flex items-center gap-3 group cursor-pointer">
       <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-[0_0_15px_rgba(67,70,239,0.5)] group-hover:scale-105 transition-transform">
@@ -58,7 +70,7 @@ function ProblemsPage() {
           </div>
 
           <ProblemFilters />
-          <ProblemTable />
+          <ProblemTable problems={problems} />
 
           {/* Pagination */}
           <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6">
