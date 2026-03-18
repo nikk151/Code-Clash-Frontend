@@ -6,6 +6,8 @@ import RegistrationForm from '../components/auth/RegistrationForm';
 import AuthBackground from '../components/auth/AuthBackground';
 
 function RegisterPage() {
+
+  
   const headerLeft = (
     <div className="flex items-center gap-2">
       <div className="size-8 bg-linear-to-br from-primary to-accent rounded-lg flex items-center justify-center">

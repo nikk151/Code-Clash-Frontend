@@ -1,11 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Input from '../Input';
 import Button from '../Button';
 import Card from '../Card';
+import { useNavigate } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
 
 const RegistrationForm = () => {
+  const navigate = useNavigate()
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  async function handleSubmit(e){
+    try {
+      e.preventDefault()
+      const response = await fetch('http://localhost:8000/api/auth/register', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+
+      })
+      const data = await response.json()
+      if (!response.ok){
+        setError(data.message)
+      }else{
+        alert('User registered successfully')
+        navigate('/dashboard')
+      }
+      console.log(data)
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Card glow glowColor="primary">
       <div className="mb-8">
@@ -18,20 +53,27 @@ const RegistrationForm = () => {
           icon="person" 
           placeholder="coder_pro" 
           type="text" 
+          value={formData.username}
+          onChange={(e)=>{setFormData({...formData, username: e.target.value})}}
         />
         <Input 
           label="Email Address" 
           icon="mail" 
           placeholder="name@company.com" 
           type="email" 
+          value = {formData.email}
+          onChange={(e)=>{setFormData({...formData, email: e.target.value})}}
         />
         <Input 
           label="Password" 
           icon="lock" 
           placeholder="••••••••" 
           type="password" 
+          value = {formData.password}
+          onChange={(e)=>{setFormData({...formData, password: e.target.value})}}
         />
-        <Button className="w-full py-4 mt-4" size="lg">
+        {error && <p className="text-red-500">{error}</p>}
+        <Button className="w-full py-4 mt-4" size="lg" onClick={handleSubmit}>
           Create Account
         </Button>
       </form>
