@@ -10,16 +10,26 @@ import { Link } from 'react-router-dom';
 
 function ProblemsPage() {
   
+  const [currentPage, setCurrentPage] = useState(1)
   const [problems, setProblems] = useState(null)
 
   useEffect(()=>{
     const problemData = async ()=>{
-      const response = await fetch("http://localhost:8000/api/problems/get-all-problems")
+      const response = await fetch(`http://localhost:8000/api/problems/get-all-problems?page=${currentPage}&limit=5`)
       const data = await response.json()
-      setProblems(data.problems)
+      setProblems(data)
     }
     problemData()
-  },[])
+  },[currentPage])
+
+  function getProblemsRange(){
+    let start = (currentPage-1)*problems.pagination.itemsPerPage + 1
+    let end = currentPage*problems.pagination.itemsPerPage
+    if(end > problems.pagination.totalItems){
+      end = problems.pagination.totalItems
+    }
+    return `${start}-${end}`
+  }
   
   const headerLeft = (
     <Link to="/" className="flex items-center gap-3 group cursor-pointer">
@@ -69,21 +79,20 @@ function ProblemsPage() {
             <ProblemCategories />
           </div>
 
-          <ProblemFilters />
-          <ProblemTable problems={problems} />
+          {/* <ProblemFilters /> */}
+          <ProblemTable problems={problems && problems.problems} />
 
           {/* Pagination */}
           <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <p className="text-slate-500 text-sm">Showing <span className="text-white font-bold">1-20</span> of <span className="text-white font-bold">2,482</span></p>
+            <p className="text-slate-500 text-sm">Showing <span className="text-white font-bold">{problems && getProblemsRange()}</span> of <span className="text-white font-bold">{problems && problems.pagination.totalItems}</span></p>
             <div className="flex gap-1.5 md:gap-2">
-              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer">
-                <span className="material-symbols-outlined text-sm md:text-base">chevron_left</span>
+              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer" onClick={()=> setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                <span className="material-symbols-outlined text-sm md:text-base"  disabled = {currentPage === 1}>chevron_left</span>
               </button>
-              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg bg-primary text-white text-sm md:text-base font-bold cursor-pointer">1</button>
-              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer text-sm md:text-base">2</button>
-              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer text-sm md:text-base">3</button>
-              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer">
-                <span className="material-symbols-outlined text-sm md:text-base">chevron_right</span>
+              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg bg-primary text-white text-sm md:text-base font-bold cursor-pointer">{currentPage}</button>
+              
+              <button className="size-9 md:size-10 flex items-center justify-center rounded-lg glass-card text-slate-400 hover:text-white transition-all cursor-pointer" onClick={()=> setCurrentPage(next => Math.min(next+1, problems && problems.pagination.totalPages))}>
+                <span className="material-symbols-outlined text-sm md:text-base"  disabled={problems && currentPage === problems.pagination.totalPages}>chevron_right</span>
               </button>
             </div>
           </div>
