@@ -1,9 +1,9 @@
 import React from 'react';
-import Header from '../components/Header';
+import Header from '../components/ui/Header';
 import ProblemDescription from '../components/match/ProblemDescription';
 import CodeEditor from '../components/match/CodeEditor';
 import Console from '../components/match/Console';
-import Button from '../components/Button';
+import Button from '../components/ui/Button';
 
 function CodingArea() {
   const headerLeft = (
@@ -30,9 +30,9 @@ function CodingArea() {
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 h-screen overflow-hidden flex flex-col">
       <Header leftContent={headerLeft} rightContent={headerRight}>
-         {/* Navigation can be placed here if needed for this page */}
+        {/* Navigation can be placed here if needed for this page */}
       </Header>
-      
+
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden">
         {/* Left Column - Problem Description */}
         <div className="lg:col-span-3 border-r border-slate-800 bg-slate-900/40 overflow-y-auto">

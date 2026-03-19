@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '../Button';
-import Card from '../Card';
+import Button from '../ui/Button';
+import Card from '../ui/Card';
 
 const VerificationForm = () => {
   return (
@@ -15,12 +15,12 @@ const VerificationForm = () => {
       <div className="space-y-8">
         <div className="flex justify-between gap-2">
           {[4, 2, '', '', '', ''].map((val, idx) => (
-            <input 
+            <input
               key={idx}
-              className="w-12 h-16 md:w-16 md:h-20 text-center text-2xl font-bold bg-slate-900/50 border-2 border-slate-700 rounded-xl text-accent-emerald emerald-glow focus:outline-none transition-all" 
-              maxLength="1" 
-              type="text" 
-              defaultValue={val} 
+              className="w-12 h-16 md:w-16 md:h-20 text-center text-2xl font-bold bg-slate-900/50 border-2 border-slate-700 rounded-xl text-accent-emerald emerald-glow focus:outline-none transition-all"
+              maxLength="1"
+              type="text"
+              defaultValue={val}
             />
           ))}
         </div>

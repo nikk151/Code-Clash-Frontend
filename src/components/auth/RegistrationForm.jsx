@@ -1,44 +1,34 @@
-import React, {useState} from 'react';
-import Input from '../Input';
-import Button from '../Button';
-import Card from '../Card';
-import { useNavigate } from 'react-router-dom';
-
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import Input from '../ui/Input';
+import Button from '../ui/Button';
+import Card from '../ui/Card';
+import { useNavigate, Link } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const RegistrationForm = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { register } = useAuth();
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   });
 
-  async function handleSubmit(e){
+  async function handleSubmit(e) {
     try {
-      e.preventDefault()
-      const response = await fetch('http://localhost:8000/api/auth/register', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-
-      })
-      const data = await response.json()
-      if (!response.ok){
-        setError(data.message)
-      }else{
-        alert('User registered successfully')
-        navigate('/dashboard')
-      }
-      console.log(data)
-      
+      e.preventDefault();
+      // useAuth().register() calls authApi AND stores user in context
+      await register(formData);
+      navigate('/dashboard');
     } catch (error) {
-      console.log(error)
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Network error — is the backend running?');
+      }
+      console.log(error);
     }
   }
   return (
@@ -48,29 +38,29 @@ const RegistrationForm = () => {
         <p className="text-slate-400">Create your account to start competing</p>
       </div>
       <form className="space-y-5">
-        <Input 
-          label="Username" 
-          icon="person" 
-          placeholder="coder_pro" 
-          type="text" 
+        <Input
+          label="Username"
+          icon="person"
+          placeholder="coder_pro"
+          type="text"
           value={formData.username}
-          onChange={(e)=>{setFormData({...formData, username: e.target.value})}}
+          onChange={(e) => { setFormData({ ...formData, username: e.target.value }) }}
         />
-        <Input 
-          label="Email Address" 
-          icon="mail" 
-          placeholder="name@company.com" 
-          type="email" 
-          value = {formData.email}
-          onChange={(e)=>{setFormData({...formData, email: e.target.value})}}
+        <Input
+          label="Email Address"
+          icon="mail"
+          placeholder="name@company.com"
+          type="email"
+          value={formData.email}
+          onChange={(e) => { setFormData({ ...formData, email: e.target.value }) }}
         />
-        <Input 
-          label="Password" 
-          icon="lock" 
-          placeholder="••••••••" 
-          type="password" 
-          value = {formData.password}
-          onChange={(e)=>{setFormData({...formData, password: e.target.value})}}
+        <Input
+          label="Password"
+          icon="lock"
+          placeholder="••••••••"
+          type="password"
+          value={formData.password}
+          onChange={(e) => { setFormData({ ...formData, password: e.target.value }) }}
         />
         {error && <p className="text-red-500">{error}</p>}
         <Button className="w-full py-4 mt-4" size="lg" onClick={handleSubmit}>
@@ -78,8 +68,8 @@ const RegistrationForm = () => {
         </Button>
       </form>
       <div className="mt-8 pt-6 border-t border-slate-800 text-center">
-        <p className="text-slate-400">Already have an account? 
-          <Link 
+        <p className="text-slate-400">Already have an account?
+          <Link
             to="/login"
             className="text-primary font-bold hover:underline ml-1 cursor-pointer"
           >
@@ -87,7 +77,7 @@ const RegistrationForm = () => {
           </Link>
         </p>
       </div>
-      
+
       {/* Alternate Flow Hint */}
       <div className="mt-8 pt-6 border-t border-slate-800 text-center">
         <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-4">Or use another method</p>

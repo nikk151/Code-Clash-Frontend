@@ -1,11 +1,11 @@
 import React from 'react';
-import Button from '../Button';
+import Button from '../ui/Button';
 
-const MatchCard = ({ 
-  title, 
-  subtitle, 
-  icon, 
-  iconColorClass = 'text-primary/30', 
+const MatchCard = ({
+  title,
+  subtitle,
+  icon,
+  iconColorClass = 'text-primary/30',
   iconGlowClass = 'drop-shadow-[0_0_15px_rgba(67,70,239,0.5)]',
   iconColorOverride = '!text-primary/60',
   headerGradientClass = 'from-indigo-500/20',
@@ -13,7 +13,7 @@ const MatchCard = ({
   buttonLabel,
   buttonTo,
   buttonVariant = 'primary',
-  children 
+  children
 }) => {
   return (
     <div className="glass-card rounded-2xl overflow-hidden flex flex-col group hover:border-primary/40 transition-all duration-300 bg-slate-900/40 border border-slate-700/50">
@@ -30,7 +30,7 @@ const MatchCard = ({
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{title}</h3>
           <p className="text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>
         </div>
-        
+
         {children}
 
         <Button

@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from '../components/Header';
-import Button from '../components/Button';
+import Header from '../components/ui/Header';
+import Button from '../components/ui/Button';
 import LobbyCard from '../components/match/LobbyCard';
 import MatchmakingStatus from '../components/match/MatchmakingStatus';
 
@@ -39,11 +39,11 @@ function WaitingRoom() {
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
       <div className="relative flex h-auto min-h-screen w-full flex-col">
         <Header leftContent={headerLeft} rightContent={headerRight} />
-        
+
         <main className="flex flex-1 flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
           {/* Background Elements */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
-          
+
           {/* Hero Content */}
           <div className="w-full max-w-2xl text-center mb-12 relative z-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 mb-6 pulse-slow">
@@ -57,13 +57,13 @@ function WaitingRoom() {
               A duel is about to begin. Share your lobby credentials with a worthy adversary.
             </p>
           </div>
-          
+
           <LobbyCard roomCode="XJ92KF" />
 
           <div className="mt-8 w-full max-w-lg">
-             <MatchmakingStatus {...matchmakingData} />
+            <MatchmakingStatus {...matchmakingData} />
           </div>
-          
+
           {/* Footer Stats */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 relative z-10">
             <div className="flex flex-col items-center">
@@ -84,20 +84,20 @@ function WaitingRoom() {
             </div>
           </div>
         </main>
-        
+
         {/* Sidebar */}
         <div className="hidden xl:fixed left-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-50">
           <Button to="/dashboard" variant="ghost" icon="home" className="group">
-             <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Dashboard</span>
+            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Dashboard</span>
           </Button>
           <Button variant="ghost" icon="swords" className="bg-primary/20 text-primary group">
-             <span className="text-sm font-bold uppercase ml-2">Battles</span>
+            <span className="text-sm font-bold uppercase ml-2">Battles</span>
           </Button>
           <Button to="/leaderboard" variant="ghost" icon="trophy" className="group">
-             <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Rankings</span>
+            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Rankings</span>
           </Button>
           <Button variant="ghost" icon="person" className="group">
-             <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Profile</span>
+            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Profile</span>
           </Button>
         </div>
       </div>

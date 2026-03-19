@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../Button';
+import Button from '../ui/Button';
 
 const LobbyCard = ({ roomCode }) => {
   const handleCopy = () => {
@@ -15,10 +15,10 @@ const LobbyCard = ({ roomCode }) => {
           <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Lobby Identity</p>
           <div className="flex items-center gap-4 bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 group">
             <span className="text-white text-5xl md:text-6xl font-mono font-black tracking-widest text-primary">{roomCode}</span>
-            <Button 
-                onClick={handleCopy}
-                className="size-14 rounded-xl shadow-lg shadow-primary/20"
-                icon="content_copy"
+            <Button
+              onClick={handleCopy}
+              className="size-14 rounded-xl shadow-lg shadow-primary/20"
+              icon="content_copy"
             />
           </div>
         </div>

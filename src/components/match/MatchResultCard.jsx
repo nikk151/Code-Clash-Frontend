@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from '../Button';
+import Button from '../ui/Button';
 
 const MatchResultCard = ({ type = 'victory', playerName, oldRating, newRating, ratingChange, avatar }) => {
   const isVictory = type === 'victory';
-  
+
   return (
     <div className="relative group">
       {isVictory && (

@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../Button';
+import Button from '../ui/Button';
 
 const CodeEditor = ({ languages, selectedLanguage, onLanguageChange, code }) => {
   return (
@@ -8,7 +8,7 @@ const CodeEditor = ({ languages, selectedLanguage, onLanguageChange, code }) => 
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-xl">code</span>
           <div className="relative">
-            <select 
+            <select
               value={selectedLanguage}
               onChange={(e) => onLanguageChange(e.target.value)}
               className="bg-slate-800 border-none text-slate-200 text-sm rounded-lg py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary appearance-none cursor-pointer outline-none"
@@ -29,7 +29,7 @@ const CodeEditor = ({ languages, selectedLanguage, onLanguageChange, code }) => 
           </Button>
         </div>
       </div>
-      
+
       {/* Space for Monaco Code Editor */}
       <div className="flex-1 overflow-auto custom-scrollbar bg-[#1e293b] p-4 font-mono text-sm leading-relaxed relative">
         <div className="flex">

@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from '../Card';
-import Button from '../Button';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
 
 const LeaderboardTable = () => {
   return (
@@ -84,7 +84,7 @@ const LeaderboardTable = () => {
           </tbody>
         </table>
       </div>
-      
+
       <div className="p-4 bg-slate-900/60 flex items-center justify-between border-t border-slate-800">
         <span className="text-sm text-slate-500">Showing 1 to 50 of 12,402 players</span>
         <div className="flex gap-2">

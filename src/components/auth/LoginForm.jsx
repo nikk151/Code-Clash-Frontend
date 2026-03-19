@@ -1,40 +1,35 @@
 import React, { useState } from 'react';
-import Input from '../Input';
+import Input from '../ui/Input';
 import SocialLoginButtons from './SocialLoginButtons';
-import { useNavigate } from 'react-router-dom';
-
-import { Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const LoginForm = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  async function handleSubmit(e){
-    try {
-      e.preventDefault()
-      const response = await fetch('http://localhost:8000/api/auth/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
 
-      })
-      const data = await response.json()
-      if (!response.ok){
-        setError(data.message)
-      }else{
-        alert('User logged in successfully')
-        navigate('/dashboard')
-      }
-      console.log(data)
-      
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+      // useAuth().login() calls authApi AND stores user in context
+      await login(formData);
+      // Redirect to where they were trying to go, or /dashboard
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
     } catch (error) {
-      console.log(error)
+      // Axios puts the response in error.response
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Network error — is the backend running?');
+      }
+      console.log(error);
     }
   }
   return (
@@ -45,27 +40,27 @@ const LoginForm = () => {
         <p className="text-slate-400 text-sm">Sign in to start your next challenge</p>
       </div>
       <form className="space-y-5" onSubmit={handleSubmit}>
-        <Input 
-          label="Email" 
-          icon="alternate_email" 
-          placeholder="Enter your email" 
-          type="email" 
+        <Input
+          label="Email"
+          icon="alternate_email"
+          placeholder="Enter your email"
+          type="email"
           className="bg-slate-900/50"
-          value = {formData.email}
-          onChange={(e)=>{setFormData({...formData, email: e.target.value})}}
+          value={formData.email}
+          onChange={(e) => { setFormData({ ...formData, email: e.target.value }) }}
         />
         <div className="space-y-2">
           <div className="flex justify-between items-center px-1">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Password</label>
             <a className="text-xs font-semibold text-accent hover:underline" href="#">Forgot?</a>
           </div>
-          <Input 
-            icon="lock" 
-            placeholder="••••••••" 
-            type="password" 
+          <Input
+            icon="lock"
+            placeholder="••••••••"
+            type="password"
             className="bg-slate-900/50"
-            value = {formData.password}
-            onChange={(e)=>{setFormData({...formData, password: e.target.value})}}
+            value={formData.password}
+            onChange={(e) => { setFormData({ ...formData, password: e.target.value }) }}
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
@@ -73,13 +68,13 @@ const LoginForm = () => {
           LOGIN TO ARENA
         </button>
       </form>
-      
+
       <SocialLoginButtons />
 
       <div className="mt-8 text-center border-t border-white/5 pt-8">
         <p className="text-sm text-slate-500">
-          New to the arena? 
-          <Link 
+          New to the arena?
+          <Link
             to="/register"
             className="text-primary font-bold hover:text-accent transition-colors ml-1 cursor-pointer"
           >
