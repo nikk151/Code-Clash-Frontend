@@ -2,7 +2,11 @@ import React from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 
-const LeaderboardTable = () => {
+const LeaderboardTable = ({ leaderboard = [], loading = false, currentUsername }) => {
+  if (loading) {
+     return <div className="p-12 text-center text-slate-500 animate-pulse">Loading Rankings...</div>;
+  }
+  
   return (
     <Card className="p-0 overflow-hidden shadow-2xl">
       <div className="overflow-x-auto">
@@ -17,70 +21,57 @@ const LeaderboardTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
-            <tr className="row-glow transition-all group cursor-pointer">
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>trophy</span>
-                  <span className="font-bold text-lg text-yellow-400">1</span>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-full border-2 border-yellow-400/50 p-0.5">
-                    <div className="w-full h-full rounded-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBcAucg79Ohe11x6z8yh80BBJ9i0pkNVYn0I3N3nP8UBzNLGqEZ_A8IWZnpD-bkqma5n8dDdoFufz0F9-HYMBDkIlJIwwNIw9QuLaqTM12RKOrhmpLIt7MaCXGJ_8RLOOIa704gEinw_dHBezzJLuniZ4YzVVbLksWPz5XDBidGy1B3orHGAbM8h30ASS_AWwmq-6JF-iHVKFDkyAVZgJTyxYb6fZA8v95MaiXUW51afdu5xcysmua0FwfbyOZto98iMo-QR0jKDmc')" }}></div>
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-100 group-hover:text-primary transition-colors">syntax_lord</p>
-                    <p className="text-xs text-slate-500">Master Tier</p>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <span className="text-lg font-black text-indigo-400 tracking-tight">3,142</span>
-              </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-slate-800 rounded-full max-w-[80px]">
-                    <div className="h-full bg-accent-emerald rounded-full" style={{ width: "94%" }}></div>
-                  </div>
-                  <span className="text-sm font-bold text-accent-emerald">94.2%</span>
-                </div>
-              </td>
-              <td className="px-6 py-4 text-right">
-                <span className="material-symbols-outlined text-accent-emerald text-sm">keyboard_double_arrow_up</span>
-              </td>
-            </tr>
-            <tr className="bg-primary/20 border-l-4 border-primary">
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">person</span>
-                  <span className="font-black text-lg text-primary">42</span>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-full border-2 border-primary p-0.5">
-                    <div className="w-full h-full rounded-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwytH4XYP0ZDA8_uA-lNZ1YvWHViAfDPW01J2da3JZo82ceMwkeQjqMTJY8s5odfvJI7nidLDYb-C9YjxToSj2O6K6TAzEUjcXiNIn26L9sWxb_fP7grFjW055ZBUIy91etmb_jaQf7wsWXnHUHmSgzI8xFEr69dC3dyVHppbMEuTRUMGSSkDI-IkuIYQX-pLLh7u55lfNcYdyQxg1AiFIM2gs5rZCWb4tDXlth9ec2DjJ6L7i0CbE-RTRFuPToUq5nTBROHHigmU')" }}></div>
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-100">current_user_01 <span className="ml-2 text-[10px] bg-primary text-white px-1.5 py-0.5 rounded uppercase">You</span></p>
-                    <p className="text-xs text-primary/80">Pro Tier</p>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 font-black text-slate-100 text-lg tracking-tight">2,480</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-slate-800 rounded-full max-w-[80px]">
-                    <div className="h-full bg-primary rounded-full" style={{ width: "68%" }}></div>
-                  </div>
-                  <span className="text-sm font-bold text-slate-100">68.5%</span>
-                </div>
-              </td>
-              <td className="px-6 py-4 text-right">
-                <span className="material-symbols-outlined text-accent-emerald text-sm">arrow_upward</span>
-              </td>
-            </tr>
+            {leaderboard.map((player, index) => {
+              const isCurrentUser = player.username === currentUsername;
+              const winRate = player.totalMatches > 0 
+                ? ((player.wins / player.totalMatches) * 100).toFixed(1) 
+                : 0;
+
+              return (
+                <tr key={player._id} className={`${isCurrentUser ? 'bg-primary/20 border-l-4 border-primary' : 'row-glow transition-all group cursor-pointer'}`}>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                       {index === 0 && <span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>trophy</span>}
+                       <span className={`font-bold text-lg ${index === 0 ? 'text-yellow-400' : (isCurrentUser ? 'text-primary' : 'text-slate-400')}`}>
+                         {index + 1}
+                       </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`size-10 rounded-full border-2 ${index === 0 ? 'border-yellow-400/50' : 'border-slate-700'} p-0.5`}>
+                        <div className="w-full h-full rounded-full bg-cover bg-center bg-slate-800 flex items-center justify-center text-xs font-bold uppercase">
+                           {player.username.substring(0,2)}
+                        </div>
+                      </div>
+                      <div>
+                        <p className={`font-bold ${isCurrentUser ? 'text-white' : 'text-slate-100 group-hover:text-primary transition-colors'}`}>
+                          {player.username}
+                          {isCurrentUser && <span className="ml-2 text-[10px] bg-primary text-white px-1.5 py-0.5 rounded uppercase">You</span>}
+                        </p>
+                        <p className={`text-xs ${isCurrentUser ? 'text-primary/80' : 'text-slate-500'}`}>{player.eloRating > 2000 ? 'Master Tier' : 'Pro Tier'}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`text-lg font-black tracking-tight ${isCurrentUser ? 'text-white' : 'text-indigo-400'}`}>{player.eloRating}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-1.5 bg-slate-800 rounded-full max-w-[80px]">
+                        <div className={`h-full rounded-full ${isCurrentUser ? 'bg-primary' : 'bg-accent-emerald'}`} style={{ width: `${winRate}%` }}></div>
+                      </div>
+                      <span className={`text-sm font-bold ${isCurrentUser ? 'text-slate-100' : 'text-accent-emerald'}`}>{winRate}%</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <span className={`material-symbols-outlined text-sm ${winRate > 50 ? 'text-accent-emerald' : 'text-danger'}`}>
+                      {winRate > 50 ? 'keyboard_double_arrow_up' : 'keyboard_double_arrow_down'}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

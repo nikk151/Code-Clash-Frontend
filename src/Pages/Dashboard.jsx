@@ -3,18 +3,52 @@ import DashboardStats from '../components/dashboard/DashboardStats';
 import MatchCard from '../components/dashboard/MatchCard';
 import LiveChallenges from '../components/dashboard/LiveChallenges';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { createMatch, joinMatch } from '../api/matchApi';
 
 // Dashboard — only renders the UNIQUE content for the dashboard page.
 // Uses useAuth() to pass real user stats to DashboardStats.
 
 function Dashboard() {
   const { user } = useAuth();
-  const [difficulty, setDifficulty] = React.useState('easy');
+  const navigate = useNavigate();
+  const [difficulty, setDifficulty] = React.useState('Easy');
+  const [roomCode, setRoomCode] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  const handleCreateMatch = async () => {
+    try {
+      setLoading(true);
+      const { data } = await createMatch({ difficulty });
+      navigate(`/match-waiting/${data.roomCode}`);
+    } catch (error) {
+      alert(error.response?.data?.message || 'Error creating match');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleJoinMatch = async () => {
+    if (!roomCode) return;
+    try {
+      setLoading(true);
+      const { data } = await joinMatch(roomCode);
+      if (data.match && data.match.status === 'in-progress') {
+        navigate(`/arena/${roomCode}`);
+      } else {
+        navigate(`/match-waiting/${roomCode}`);
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || 'Error joining match');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const difficulties = [
-    { id: 'easy', label: 'Easy', desc: 'Fundamentals', icon: 'child_care', color: 'emerald' },
-    { id: 'medium', label: 'Medium', desc: 'Data Structures', icon: 'psychology', color: 'amber' },
-    { id: 'hard', label: 'Hard', desc: 'Algorithms', icon: 'bolt', color: 'rose' }
+    { id: 'Easy', label: 'Easy', desc: 'Fundamentals', icon: 'child_care', color: 'emerald' },
+    { id: 'Medium', label: 'Medium', desc: 'Data Structures', icon: 'psychology', color: 'amber' },
+    { id: 'Hard', label: 'Hard', desc: 'Algorithms', icon: 'bolt', color: 'rose' }
   ];
 
   return (
@@ -30,8 +64,8 @@ function Dashboard() {
           title="Create Match"
           subtitle="Configure your session and invite rivals"
           icon="add_circle"
-          buttonLabel="Create Room"
-          buttonTo="/match-waiting"
+          buttonLabel={loading ? "Processing..." : "Create Room"}
+          onButtonClick={handleCreateMatch}
           effectClass="ring-pulse"
         >
           <div className="space-y-6">
@@ -73,15 +107,22 @@ function Dashboard() {
           iconColorOverride="!text-emerald-500/40"
           headerGradientClass="from-emerald-500/20"
           effectClass="scan-effect"
-          buttonLabel="Join Room"
-          buttonTo="/arena"
+          buttonLabel={loading ? "Processing..." : "Join Room"}
+          onButtonClick={handleJoinMatch}
           buttonVariant="secondary"
         >
           <div className="space-y-4">
             <label className="block">
               <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest block mb-2">Room Code</span>
               <div className="relative">
-                <input className="w-full rounded-lg bg-slate-100 dark:bg-primary/10 border-slate-200 dark:border-primary/20 text-slate-900 dark:text-white h-14 px-4 text-center text-xl font-mono tracking-[0.5em] uppercase placeholder:tracking-normal placeholder:font-sans placeholder:text-slate-500 focus:ring-primary focus:border-primary transition-all outline-none" maxLength={6} placeholder="E.G. XJ92KF" type="text" />
+                <input 
+                  className="w-full rounded-lg bg-slate-100 dark:bg-primary/10 border-slate-200 dark:border-primary/20 text-slate-900 dark:text-white h-14 px-4 text-center text-xl font-mono tracking-[0.5em] uppercase placeholder:tracking-normal placeholder:font-sans placeholder:text-slate-500 focus:ring-primary focus:border-primary transition-all outline-none" 
+                  maxLength={6} 
+                  placeholder="E.G. XJ92KF" 
+                  type="text"
+                  value={roomCode}
+                  onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+                />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 text-primary">
                   <span className="material-symbols-outlined">key</span>
                 </div>

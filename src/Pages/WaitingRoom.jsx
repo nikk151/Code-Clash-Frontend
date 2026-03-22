@@ -1,10 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/ui/Header';
 import Button from '../components/ui/Button';
 import LobbyCard from '../components/match/LobbyCard';
 import MatchmakingStatus from '../components/match/MatchmakingStatus';
+import useAuth from '../hooks/useAuth';
+import socket from '../socket/socketClient';
 
 function WaitingRoom() {
+  const { roomCode } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user || !roomCode) return;
+
+    // Connect to room via socket
+    socket.connect();
+    socket.emit('join-room', { roomCode, username: user.username });
+
+    // When opponent joins, match auto-starts, transition to arena
+    socket.on('opponent-joined', (data) => {
+      console.log('Opponent joined!', data);
+      navigate(`/arena/${roomCode}`);
+    });
+
+    return () => {
+      socket.off('opponent-joined');
+    };
+  }, [user, roomCode, navigate]);
   const headerLeft = (
     <div className="flex items-center gap-4 text-primary">
       <div className="size-8">
@@ -58,7 +82,7 @@ function WaitingRoom() {
             </p>
           </div>
 
-          <LobbyCard roomCode="XJ92KF" />
+          <LobbyCard roomCode={roomCode || "XJ92KF"} />
 
           <div className="mt-8 w-full max-w-lg">
             <MatchmakingStatus {...matchmakingData} />
@@ -85,8 +109,7 @@ function WaitingRoom() {
           </div>
         </main>
 
-        {/* Sidebar */}
-        <div className="hidden xl:fixed left-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-50">
+        <div className="hidden xl:flex xl:fixed left-10 top-1/2 -translate-y-1/2 flex-col gap-6 z-50">
           <Button to="/dashboard" variant="ghost" icon="home" className="group">
             <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Dashboard</span>
           </Button>

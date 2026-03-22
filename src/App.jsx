@@ -46,7 +46,9 @@ function App() {
 
           {/* Protected standalone pages */}
           <Route path="/arena" element={<CodingArea />} />
+          <Route path="/arena/:roomCode" element={<CodingArea />} />
           <Route path="/match-waiting" element={<WaitingRoom />} />
+          <Route path="/match-waiting/:roomCode" element={<WaitingRoom />} />
           <Route path="/post-match" element={<PostMatch />} />
         </Route>
       </Routes>

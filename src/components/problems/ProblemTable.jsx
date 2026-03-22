@@ -56,13 +56,13 @@ const ProblemTable = ({problems}) => {
               </td>
               <td className="px-8 py-6">
                 <div className="flex items-center justify-end gap-2">
-                  <Link to={`/CodingArea/${problem.slug}`}>
+                  <Link to={`/arena/${problem.slug}`}>
                     <button className="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold border border-white/10 transition-all flex items-center gap-2 cursor-pointer">
                       <span className="material-symbols-outlined text-[18px]">swords</span>
                       Create Match
                     </button>
                   </Link>
-                  <Link to={`/CodingArea/${problem.slug}`}>
+                  <Link to={`/arena/${problem.slug}`}>
                     <button className="bg-white/5 hover:bg-primary hover:text-white text-primary px-5 py-2 rounded-lg text-sm font-bold border border-primary/30 transition-all cursor-pointer">Solve</button>
                   </Link>
                 </div>

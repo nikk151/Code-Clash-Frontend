@@ -16,6 +16,15 @@ export const createMatch = (matchData) => {
 };
 
 /**
+ * GET /api/match/:roomCode
+ * Fetches the current match details.
+ * @param {string} roomCode - The room code
+ */
+export const getMatch = (roomCode) => {
+  return api.get(`/match/${roomCode}`);
+};
+
+/**
  * POST /api/match/join-match/:roomCode
  * Joins an existing match room.
  * @param {string} roomCode - The room code (e.g., 'XJ92KF')
@@ -30,14 +39,12 @@ export const joinMatch = (roomCode) => {
  * @param {string} roomCode - The room code
  * @param {Object} submission - { code, language }
  */
-export const submitCode = (roomCode, submission) => {
-  return api.post(`/match/submit-code/${roomCode}`, submission);
+export const submitCode = (roomCode, codeData) => {
+  return api.post(`/match/submit-code/${roomCode}`, codeData);
 };
 
 /**
  * POST /api/match/run-sample/:roomCode
- * Runs code against sample test cases (without submitting).
- * @param {string} roomCode - The room code
  * @param {Object} submission - { code, language }
  */
 export const runSampleTestCases = (roomCode, submission) => {

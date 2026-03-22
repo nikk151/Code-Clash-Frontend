@@ -12,6 +12,7 @@ const MatchCard = ({
   effectClass = '',
   buttonLabel,
   buttonTo,
+  onButtonClick,
   buttonVariant = 'primary',
   children
 }) => {
@@ -37,6 +38,7 @@ const MatchCard = ({
           variant={buttonVariant}
           icon={buttonVariant === 'primary' ? 'arrow_forward' : 'login'}
           to={buttonTo}
+          onClick={onButtonClick}
           className={`w-full py-4 group ${buttonVariant === 'primary' ? 'shadow-lg shadow-primary/30' : ''}`}
         >
           {buttonLabel}
