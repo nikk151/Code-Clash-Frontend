@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
 
 // Layouts
 import AuthLayout from './layouts/AuthLayout';
@@ -22,7 +21,7 @@ import PostMatch from './pages/PostMatch';
 import Leaderboard from './pages/Leaderboard';
 import WaitingRoom from './pages/WaitingRoom';
 
-function App() {
+function CodeClashApp() {
   return (
     <Router>
       <Routes>
@@ -58,4 +57,4 @@ function App() {
   );
 }
 
-export default App;
+export default CodeClashApp;

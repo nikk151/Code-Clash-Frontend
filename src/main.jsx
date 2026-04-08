@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
+import CodeClashApp from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 
 // AuthProvider wraps the ENTIRE app so that any component can use useAuth()
@@ -9,7 +9,7 @@ import { AuthProvider } from './context/AuthContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <CodeClashApp />
     </AuthProvider>
   </StrictMode>,
 )
