@@ -1,16 +1,59 @@
-# React + Vite
+# Code Clash Frontend 💻
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Official web client for Code Clash — the ultimate real-time coding combat arena. Built with React, Vite, and absolute premium aesthetics.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **The Forge (Arena)**: A high-performance IDE experience with real-time sync with opponents.
+- **Dynamic Leaderboard**: Track your rank among the global elite.
+- **Real-time Matchmaking**: Join rooms via secret codes or queue for quick battles.
+- **Instant Feedback**: View test case results and performance stats immediately.
+- **Aesthetic UI**: Dark-mode primary design with glassmorphism and neon accents.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: [React](https://reactjs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Real-time Connectivity**: [Socket.io Client](https://socket.io/)
+- **Icons & Graphics**: [Google Fonts](https://fonts.google.com/), [Lucide React](https://lucide.dev/)
+- **State Management**: [React Context API](https://reactjs.org/docs/context.html)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js installed
+- A running instance of the [Code Clash API](https://github.com/your-username/code-clash-api)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file:
+   ```bash
+   VITE_API_URL=http://localhost:8000/api
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Key Pages
+
+- `/`: The Landing Page (Hero section, features, stats).
+- `/dashboard`: Personal hub with stats and matchmaking.
+- `/arena/:roomCode`: The heat of battle — solve problems against rivals.
+- `/leaderboard`: Global rankings.
+- `/profile`: Personal performance history and ELO tracking.
+
+## Deployment
+
+Recommended to deploy on **Vercel** or **Netlify**. Ensure `VITE_API_URL` is set to your deployed backend URL in the deployment settings.
+
+## License
+
+MIT
