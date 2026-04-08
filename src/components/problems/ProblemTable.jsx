@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate , Link } from 'react-router-dom';
+import { createMatch } from '../../api/matchApi';
 
 const ProblemTable = ({problems}) => {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [loadingCode, setLoadingCode] = useState(null);
 
-  
+  const handleCreateMatch = async (problemId) => {
+    try {
+      setLoadingCode(problemId);
+      const res = await createMatch({ problemId });
+      const { roomCode } = res.data;
+      navigate(`/match-waiting/${roomCode}`);
+    } catch (err) {
+      console.error('Failed to create match for problem:', err);
+      alert('Failed to create match. ' + (err.response?.data?.message || err.message));
+    } finally {
+      setLoadingCode(null);
+    }
+  };
 
-
+  const handleSolveNow = async (problemId) => {
+    try {
+      setLoadingCode(`solve-${problemId}`);
+      const res = await createMatch({ problemId, isPractice: true });
+      const { roomCode } = res.data;
+      navigate(`/arena/${roomCode}`);
+    } catch (err) {
+      console.error('Failed to start practice for problem:', err);
+      alert('Failed to start practice session. ' + (err.response?.data?.message || err.message));
+    } finally {
+      setLoadingCode(null);
+    }
+  };
   const getDifficultyColor = (diff) => {
     switch (diff) {
       case 'Easy': return 'text-emerald-accent bg-emerald-accent/10 border-emerald-accent/20';
@@ -56,15 +82,21 @@ const ProblemTable = ({problems}) => {
               </td>
               <td className="px-8 py-6">
                 <div className="flex items-center justify-end gap-2">
-                  <Link to={`/arena/${problem.slug}`}>
-                    <button className="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold border border-white/10 transition-all flex items-center gap-2 cursor-pointer">
-                      <span className="material-symbols-outlined text-[18px]">swords</span>
-                      Create Match
-                    </button>
-                  </Link>
-                  <Link to={`/arena/${problem.slug}`}>
-                    <button className="bg-white/5 hover:bg-primary hover:text-white text-primary px-5 py-2 rounded-lg text-sm font-bold border border-primary/30 transition-all cursor-pointer">Solve</button>
-                  </Link>
+                  <button 
+                    onClick={() => handleCreateMatch(problem._id)}
+                    disabled={loadingCode === problem._id}
+                    className="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold border border-white/10 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span className="material-symbols-outlined text-[18px]">
+                      {loadingCode === problem._id ? 'hourglass_empty' : 'swords'}
+                    </span>
+                    {loadingCode === problem._id ? 'Creating...' : 'Create Match'}
+                  </button>
+                  <button 
+                    onClick={() => handleSolveNow(problem._id)}
+                    disabled={loadingCode === `solve-${problem._id}`}
+                    className="bg-white/5 hover:bg-primary hover:text-white text-primary px-5 py-2 rounded-lg text-sm font-bold border border-primary/30 transition-all cursor-pointer disabled:opacity-50">
+                    {loadingCode === `solve-${problem._id}` ? 'Loading...' : 'Solve'}
+                  </button>
                 </div>
               </td>
             </tr>
@@ -91,12 +123,20 @@ const ProblemTable = ({problems}) => {
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <button className="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-3 rounded-xl text-xs font-bold border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer">
-                <span className="material-symbols-outlined text-sm">swords</span>
-                Match
+              <button 
+                onClick={() => handleCreateMatch(problem._id)}
+                disabled={loadingCode === problem._id}
+                className="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-3 rounded-xl text-xs font-bold border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                <span className="material-symbols-outlined text-sm">
+                  {loadingCode === problem._id ? 'hourglass_empty' : 'swords'}
+                </span>
+                {loadingCode === problem._id ? 'Creating...' : 'Match'}
               </button>
-              <button className="bg-white/5 hover:bg-primary hover:text-white text-primary px-4 py-3 rounded-xl text-xs font-bold border border-primary/30 transition-all cursor-pointer">
-                Solve Now
+              <button 
+                onClick={() => handleSolveNow(problem._id)}
+                disabled={loadingCode === `solve-${problem._id}`}
+                className="bg-white/5 hover:bg-primary hover:text-white text-primary px-4 py-3 rounded-xl text-xs font-bold border border-primary/30 transition-all cursor-pointer disabled:opacity-50">
+                {loadingCode === `solve-${problem._id}` ? 'Loading...' : 'Solve Now'}
               </button>
             </div>
           </div>

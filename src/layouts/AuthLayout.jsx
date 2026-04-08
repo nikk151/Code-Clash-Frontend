@@ -1,15 +1,10 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, Navigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 import Header from '../components/ui/Header';
 import Footer from '../components/ui/Footer';
 import Logo from '../components/ui/Logo';
 import AuthBackground from '../components/auth/AuthBackground';
-
-// AuthLayout wraps all authentication pages (Login, Register, Verify)
-// It provides the shared background, header (with logo + help nav), and footer
-// so that individual auth pages only need to render their unique form content.
-//
-// Uses React Router's <Outlet /> to render the matched child route's component.
 
 const AUTH_FOOTER_LINKS = [
   { label: 'Terms of Service', href: '#' },
@@ -18,6 +13,13 @@ const AUTH_FOOTER_LINKS = [
 ];
 
 const AuthLayout = () => {
+  const { user, loading } = useAuth();
+
+  // If already authenticated, redirect to dashboard so they can't see the login/register pages
+  if (!loading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   // Left side of header: just the logo (not clickable on auth pages, or link to landing)
   const headerLeft = <Logo to="/" />;
 

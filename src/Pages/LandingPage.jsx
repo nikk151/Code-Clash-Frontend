@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Header from '../components/ui/Header';
 import Footer from '../components/ui/Footer';
 import Button from '../components/ui/Button';
@@ -10,10 +10,15 @@ import Features from '../components/landing/Features';
 import Stats from '../components/landing/Stats';
 import CTA from '../components/landing/CTA';
 import useServerHealth from '../hooks/useServerHealth';
+import useAuth from '../hooks/useAuth';
 
 function LandingPage() {
-  // Data fetching handled by custom hook — clean!
+  const { user, loading } = useAuth();
   const { status: serverStatus } = useServerHealth();
+
+  if (!loading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const landingHeaderRight = (
     <div className="flex flex-1 justify-end gap-8 items-center">

@@ -52,7 +52,7 @@ const LoginForm = () => {
         <div className="space-y-2">
           <div className="flex justify-between items-center px-1">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Password</label>
-            <a className="text-xs font-semibold text-accent hover:underline" href="#">Forgot?</a>
+            <Link className="text-xs font-semibold text-accent hover:underline" to="/forgot-password">Forgot?</Link>
           </div>
           <Input
             icon="lock"
@@ -68,8 +68,6 @@ const LoginForm = () => {
           LOGIN TO ARENA
         </button>
       </form>
-
-      <SocialLoginButtons />
 
       <div className="mt-8 text-center border-t border-white/5 pt-8">
         <p className="text-sm text-slate-500">

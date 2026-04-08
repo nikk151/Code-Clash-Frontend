@@ -30,7 +30,7 @@ const MatchmakingStatus = ({ playerAvatar, opponentAvatar, status, waitTime }) =
           <div className="size-2 rounded-full bg-primary neon-glow pulse-slow"></div>
           <p className="text-slate-100 text-lg font-bold tracking-wide">{status}</p>
         </div>
-        <p className="text-slate-500 text-sm">Estimated wait time: <span className="text-slate-300">{waitTime}</span></p>
+        <p className="text-slate-500 text-xs animate-pulse font-medium">Please wait on this page for the match to start...</p>
       </div>
     </div>
   );

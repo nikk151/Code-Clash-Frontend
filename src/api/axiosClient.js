@@ -49,23 +49,34 @@ const api = axios.create({
 // For now, we just pass errors through so each component can handle them.
 
 api.interceptors.response.use(
-  // Success — just return the response as-is
-  (response) => response,
-
-  // Error — handle common errors globally
+  (response) => {
+    // If the request succeeds, just return the response
+    return response;
+  },
   (error) => {
-    // If the server says "not authenticated" (401), redirect to login
-    if (error.response && error.response.status === 401) {
-      // TODO (Phase 4): Clear auth context and redirect
-      console.warn('Unauthorized — redirecting to login');
+    // -------------------------------------------------------------
+    // Global Error Handling
+    // -------------------------------------------------------------
+    if (error.response) {
+      // The server responded with a status code outside the 2xx range
+
+      // 401 Unauthorized — Session expired or invalid token
+      if (error.response.status === 401) {
+        console.warn('Session expired or unauthorized. Emitting event to clear auth context.');
+        window.dispatchEvent(new Event('auth-unauthorized'));
+      }
+
+      // Add other global error handling here if needed
+      // e.g., 500 Internal Server Error, 403 Forbidden
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received from server. Is the backend running?');
+    } else {
+      // Something happened while setting up the request
+      console.error('Error setting up the request:', error.message);
     }
 
-    // If the server is completely unreachable (network error)
-    if (!error.response) {
-      console.error('Network error — is the backend running?');
-    }
-
-    // Re-throw so the calling component can also handle it
+    // Pass the error down to the component so it can show a specific message
     return Promise.reject(error);
   }
 );

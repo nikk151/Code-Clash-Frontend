@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../ui/Button';
 
-const MatchResultCard = ({ type = 'victory', playerName, oldRating, newRating, ratingChange, avatar }) => {
+const MatchResultCard = ({ type = 'victory', playerName, oldRating, newRating, ratingChange, avatar, isCurrentUser = true }) => {
   const isVictory = type === 'victory';
 
   return (
@@ -49,27 +49,16 @@ const MatchResultCard = ({ type = 'victory', playerName, oldRating, newRating, r
             </span>
           </div>
         </div>
-        <div className="w-full space-y-3 mt-auto">
-          {isVictory ? (
-            <>
-              <Button to="/dashboard" variant="accent" icon="dashboard" className="w-full py-4 uppercase tracking-widest text-sm">
-                Return to Dashboard
-              </Button>
-              <Button variant="secondary" className="w-full py-3 text-sm uppercase">
-                View Match Details
-              </Button>
-            </>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              <Button to="/arena" variant="secondary" icon="refresh" className="py-4 text-sm uppercase">
-                Rematch
-              </Button>
-              <Button to="/" variant="secondary" icon="close" className="py-4 text-sm uppercase">
-                Quit
-              </Button>
-            </div>
-          )}
-        </div>
+        {isCurrentUser && (
+          <div className="w-full space-y-3 mt-auto">
+            <Button to="/dashboard" variant="accent" icon="dashboard" className="w-full py-4 uppercase tracking-widest text-sm">
+              Return to Dashboard
+            </Button>
+            <Button to="/problems" variant="secondary" icon="refresh" className="w-full py-4 text-sm uppercase">
+              Rematch
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,11 +2,15 @@ import React from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 
-const LeaderboardTable = ({ leaderboard = [], loading = false, currentUsername }) => {
+const LeaderboardTable = ({ leaderboard = [], loading = false, currentUsername, pagination, currentPage, onPageChange }) => {
   if (loading) {
      return <div className="p-12 text-center text-slate-500 animate-pulse">Loading Rankings...</div>;
   }
   
+  const { totalUsers = 0, totalPages = 1, limit = 20 } = pagination || {};
+  const startIndex = (currentPage - 1) * limit + 1;
+  const endIndex = Math.min(currentPage * limit, totalUsers);
+
   return (
     <Card className="p-0 overflow-hidden shadow-2xl">
       <div className="overflow-x-auto">
@@ -21,25 +25,27 @@ const LeaderboardTable = ({ leaderboard = [], loading = false, currentUsername }
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
-            {leaderboard.map((player, index) => {
+            {leaderboard.map((player) => {
               const isCurrentUser = player.username === currentUsername;
-              const winRate = player.totalMatches > 0 
+              const rankStr = player.rank || "-";
+              // We receive pre-calculated winRate if backed is updated, otherwise fallback
+              const winRate = player.winRate || (player.totalMatches > 0 
                 ? ((player.wins / player.totalMatches) * 100).toFixed(1) 
-                : 0;
+                : 0);
 
               return (
-                <tr key={player._id} className={`${isCurrentUser ? 'bg-primary/20 border-l-4 border-primary' : 'row-glow transition-all group cursor-pointer'}`}>
+                <tr key={player.username} className={`${isCurrentUser ? 'bg-primary/20 border-l-4 border-primary' : 'row-glow transition-all group cursor-pointer'}`}>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                       {index === 0 && <span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>trophy</span>}
-                       <span className={`font-bold text-lg ${index === 0 ? 'text-yellow-400' : (isCurrentUser ? 'text-primary' : 'text-slate-400')}`}>
-                         {index + 1}
+                       {rankStr === 1 && <span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>trophy</span>}
+                       <span className={`font-bold text-lg ${rankStr === 1 ? 'text-yellow-400' : (isCurrentUser ? 'text-primary' : 'text-slate-400')}`}>
+                         {rankStr}
                        </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className={`size-10 rounded-full border-2 ${index === 0 ? 'border-yellow-400/50' : 'border-slate-700'} p-0.5`}>
+                      <div className={`size-10 rounded-full border-2 ${rankStr === 1 ? 'border-yellow-400/50' : 'border-slate-700'} p-0.5`}>
                         <div className="w-full h-full rounded-full bg-cover bg-center bg-slate-800 flex items-center justify-center text-xs font-bold uppercase">
                            {player.username.substring(0,2)}
                         </div>
@@ -76,13 +82,26 @@ const LeaderboardTable = ({ leaderboard = [], loading = false, currentUsername }
         </table>
       </div>
 
-      <div className="p-4 bg-slate-900/60 flex items-center justify-between border-t border-slate-800">
-        <span className="text-sm text-slate-500">Showing 1 to 50 of 12,402 players</span>
-        <div className="flex gap-2">
-          <Button variant="secondary" icon="chevron_left" className="size-8" />
-          <button className="size-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs cursor-pointer">1</button>
-          <button className="size-8 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-colors font-bold text-xs cursor-pointer">2</button>
-          <Button variant="secondary" icon="chevron_right" className="size-8" />
+      <div className="p-4 bg-slate-900/60 flex flex-col md:flex-row items-center justify-between border-t border-slate-800 gap-4">
+        <span className="text-sm text-slate-500">
+          Showing {totalUsers > 0 ? startIndex : 0} to {endIndex} of {totalUsers} players
+        </span>
+        <div className="flex gap-2 items-center">
+          <Button 
+            variant="secondary" 
+            icon="chevron_left" 
+            className="size-8 p-0 flex items-center justify-center opacity-80 hover:opacity-100" 
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
+          />
+          <span className="text-sm font-bold text-slate-300 px-2">Page {currentPage} of {totalPages || 1}</span>
+          <Button 
+            variant="secondary" 
+            icon="chevron_right" 
+            className="size-8 p-0 flex items-center justify-center opacity-80 hover:opacity-100" 
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || totalPages === 0 || loading}
+          />
         </div>
       </div>
     </Card>

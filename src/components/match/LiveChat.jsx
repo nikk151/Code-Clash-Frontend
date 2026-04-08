@@ -6,7 +6,8 @@ import React from 'react';
  */
 const LiveChat = ({
   chatMessages = [],
-  onSendMessage = () => {}
+  onSendMessage = () => {},
+  onClose = () => {}
 }) => {
   const [inputValue, setInputValue] = React.useState('');
   const messagesEndRef = React.useRef(null);
@@ -20,14 +21,23 @@ const LiveChat = ({
   React.useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
+
   return (
     <div className="flex flex-col h-full bg-slate-950/40 border-l border-slate-800">
       {/* Tab Header */}
-      <div className="flex border-b border-slate-800 px-4 shrink-0">
-        <button className="px-5 py-3 text-xs font-black uppercase tracking-widest border-b-2 border-primary text-white flex items-center gap-2 transition-all">
+      <div className="flex items-center justify-between border-b border-slate-800 px-4 shrink-0">
+        <div className="px-1 py-3 text-xs font-black uppercase tracking-widest border-b-2 border-primary text-white flex items-center gap-2 transition-all">
           <span className="material-symbols-outlined text-base">forum</span>
           Live Chat
+        </div>
+        <button 
+          onClick={onClose}
+          className="p-1.5 rounded-lg bg-primary/10 text-primary border border-primary/40 hover:bg-primary/20 transition-all cursor-pointer flex items-center justify-center"
+          title="Close Chat"
+        >
+          <span className="material-symbols-outlined text-lg">close</span>
         </button>
+
       </div>
 
       {/* Messages */}

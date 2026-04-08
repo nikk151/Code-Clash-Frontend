@@ -15,6 +15,7 @@ import CodingArea from './pages/CodingArea';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import VerifyPage from './pages/VerifyPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProblemsPage from './pages/ProblemsPage';
 import Dashboard from './pages/Dashboard';
 import PostMatch from './pages/PostMatch';
@@ -33,6 +34,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
 
         {/* Protected — Main app pages (must be logged in) */}

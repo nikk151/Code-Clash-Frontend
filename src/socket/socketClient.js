@@ -6,7 +6,7 @@ const SOCKET_URL = API_BASE_URL.replace(/\/api$/, '');
 
 // Create a single global socket instance
 const socket = io(SOCKET_URL, {
-  autoConnect: true,
+  autoConnect: false,
   withCredentials: true,
   transports: ['websocket', 'polling'] // Try WebSocket first
 });

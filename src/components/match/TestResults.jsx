@@ -58,6 +58,17 @@ const TestResults = ({ testResults = [] }) => {
                 </div>
               </div>
 
+              {result.status === 'error' && result.actualOutput && (
+                <div className="mt-3 flex flex-col gap-2 border-t border-danger/20 pt-3">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-danger font-bold uppercase tracking-wider mb-1">Error Detail</span>
+                    <div className="bg-slate-900/50 p-2 rounded border border-danger/30 font-mono text-xs text-red-300 whitespace-pre-wrap">
+                      {result.actualOutput}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {result.input !== undefined && (
                 <div className="mt-3 flex flex-col gap-2 border-t border-slate-700/50 pt-3">
                   <div className="flex flex-col">

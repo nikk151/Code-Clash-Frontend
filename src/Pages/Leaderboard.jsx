@@ -9,13 +9,20 @@ function Leaderboard() {
   const { user } = useAuth();
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({ totalPages: 1, totalUsers: 0 });
+  const [userStats, setUserStats] = useState(null);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        const { data } = await getLeaderboard();
+        const { data } = await getLeaderboard(currentPage, 20);
         setLeaderboard(data.leaderboard || []);
+        if (data.pagination) setPagination(data.pagination);
+        if (data.userStats) setUserStats(data.userStats);
       } catch (error) {
         console.error('Failed to fetch leaderboard:', error);
       } finally {
@@ -23,16 +30,19 @@ function Leaderboard() {
       }
     };
     fetchLeaderboard();
-  }, []);
+  }, [currentPage]);
 
   return (
     <>
-      <LeaderboardStats />
+      <LeaderboardStats userStats={userStats} currentElo={user?.eloRating} />
       <LeaderboardControls />
       <LeaderboardTable 
         leaderboard={leaderboard} 
         loading={loading} 
         currentUsername={user?.username} 
+        pagination={pagination}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
     </>
   );

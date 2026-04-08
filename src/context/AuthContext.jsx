@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { login as loginApi, register as registerApi, logout as logoutApi } from '../api/authApi';
-import { getStats } from '../api/profileApi';
+import { login as loginApi, register as registerApi, logout as logoutApi, getCurrentUser } from '../api/authApi';
 
 // ===================================================================
 // AuthContext — Manages the user's authentication state globally
@@ -34,21 +33,12 @@ export const AuthProvider = ({ children }) => {
   // =================================================================
   // Session validation — runs ONCE when the app first loads
   // =================================================================
-  // Your backend uses httpOnly cookies. The browser sends the cookie
-  // automatically. If the cookie is valid, /profile/stats returns user data.
-  // If the cookie is expired/missing, it returns 401 → we know user is not logged in.
   useEffect(() => {
     const validateSession = async () => {
       try {
-        const { data } = await getStats();
+        const { data } = await getCurrentUser();
         // If we get here, the cookie is valid — user is logged in
-        setUser({
-          username: data.stats.username,
-          eloRating: data.stats.eloRating,
-          totalMatches: data.stats.totalMatches,
-          wins: data.stats.wins,
-          losses: data.stats.losses,
-        });
+        setUser(data.user);
       } catch (error) {
         // 401 or network error — user is not logged in, that's fine
         setUser(null);
@@ -59,6 +49,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     validateSession();
+  }, []);
+
+  // Listen for the global 401 event dispatched by axiosClient
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null);
+    };
+    
+    window.addEventListener('auth-unauthorized', handleUnauthorized);
+    
+    return () => {
+      window.removeEventListener('auth-unauthorized', handleUnauthorized);
+    };
   }, []);
 
   // =================================================================

@@ -12,6 +12,13 @@ function WaitingRoom() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const handleLeave = () => {
+    if (socket.connected && roomCode) {
+      socket.emit('leave-room', { roomCode, username: user?.username });
+    }
+    navigate('/dashboard');
+  };
+
   useEffect(() => {
     if (!user || !roomCode) return;
 
@@ -84,45 +91,23 @@ function WaitingRoom() {
 
           <LobbyCard roomCode={roomCode || "XJ92KF"} />
 
-          <div className="mt-8 w-full max-w-lg">
+          <div className="mt-8 w-full max-w-lg flex flex-col items-center gap-6">
             <MatchmakingStatus {...matchmakingData} />
+            
+            <Button 
+              variant="secondary" 
+              onClick={handleLeave}
+              className="mt-4 bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white transition-all group"
+            >
+              <span className="material-symbols-outlined mr-2 group-hover:rotate-90 transition-transform">close</span>
+              KILL MATCH (CANCEL)
+            </Button>
           </div>
 
-          {/* Footer Stats */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 relative z-10">
-            <div className="flex flex-col items-center">
-              <p className="text-3xl font-black text-white italic">12.4k</p>
-              <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Active Clashes</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-3xl font-black text-white italic">42ms</p>
-              <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Latency</p>
-            </div>
-            <div className="hidden md:flex flex-col items-center">
-              <p className="text-3xl font-black text-white italic">Global</p>
-              <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Match Scope</p>
-            </div>
-            <div className="hidden md:flex flex-col items-center">
-              <p className="text-3xl font-black text-white italic">Ranked</p>
-              <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Game Mode</p>
-            </div>
-          </div>
+          
         </main>
 
-        <div className="hidden xl:flex xl:fixed left-10 top-1/2 -translate-y-1/2 flex-col gap-6 z-50">
-          <Button to="/dashboard" variant="ghost" icon="home" className="group">
-            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Dashboard</span>
-          </Button>
-          <Button variant="ghost" icon="swords" className="bg-primary/20 text-primary group">
-            <span className="text-sm font-bold uppercase ml-2">Battles</span>
-          </Button>
-          <Button to="/leaderboard" variant="ghost" icon="trophy" className="group">
-            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Rankings</span>
-          </Button>
-          <Button variant="ghost" icon="person" className="group">
-            <span className="text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase ml-2">Profile</span>
-          </Button>
-        </div>
+        
       </div>
     </div>
   );

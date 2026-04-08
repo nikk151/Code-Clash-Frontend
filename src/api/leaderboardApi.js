@@ -10,6 +10,10 @@ import api from './axiosClient';
  * GET /api/leaderboard
  * Fetches the leaderboard rankings.
  */
-export const getLeaderboard = () => {
-  return api.get('/leaderboard');
+/**
+ * GET /api/leaderboard
+ * Fetches the leaderboard rankings.
+ */
+export const getLeaderboard = (page = 1, limit = 20) => {
+  return api.get(`/leaderboard?page=${page}&limit=${limit}`);
 };

@@ -53,3 +53,11 @@ export const sendOTP = (data) => {
 export const changePassword = (data) => {
   return api.post('/auth/change-password', data);
 };
+
+/**
+ * GET /api/auth/me
+ * Gets the current verified user session data.
+ */
+export const getCurrentUser = () => {
+  return api.get('/auth/me');
+};

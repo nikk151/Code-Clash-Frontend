@@ -35,6 +35,15 @@ const ProblemDescription = ({ problem, loading, error }) => {
         <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">{problem.title}</h2>
         <div className="prose prose-invert max-w-none space-y-4 text-slate-300">
           {problem.description}
+          <div className='mt-6'></div>
+          {problem.functionName && (
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-sm">terminal</span>
+              <p className="text-sm font-medium text-slate-200">
+                Function to implement: <code className="text-primary font-bold">{problem.functionName}</code>
+              </p>
+            </div>
+          )}
 
           {testCases.length > 0 && (
             <div className="mt-8 space-y-6">
