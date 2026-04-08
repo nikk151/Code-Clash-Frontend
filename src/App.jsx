@@ -2,24 +2,24 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Layouts
-import AuthLayout from './layouts/AuthLayout';
-import MainLayout from './layouts/MainLayout';
+import AuthLayout from './layouts/AuthLayout.jsx';
+import MainLayout from './layouts/MainLayout.jsx';
 
 // Route guards
-import ProtectedRoute from './routes/ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 // Pages
-import LandingPage from './pages/LandingPage';
-import CodingArea from './pages/CodingArea';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import VerifyPage from './pages/VerifyPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ProblemsPage from './pages/ProblemsPage';
-import Dashboard from './pages/Dashboard';
-import PostMatch from './pages/PostMatch';
-import Leaderboard from './pages/Leaderboard';
-import WaitingRoom from './pages/WaitingRoom';
+import LandingPage from './pages/LandingPage.jsx';
+import CodingArea from './pages/CodingArea.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
+import VerifyPage from './pages/VerifyPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ProblemsPage from './pages/ProblemsPage.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import PostMatch from './pages/PostMatch.jsx';
+import Leaderboard from './pages/Leaderboard.jsx';
+import WaitingRoom from './pages/WaitingRoom.jsx';
 
 function CodeClashApp() {
   return (
