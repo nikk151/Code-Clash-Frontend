@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import { useNavigate, Link } from 'react-router-dom';
 import { sendOTP } from '../../api/authApi';
 
+// Password rules — mirrors the backend's validators.js exactly
+const PASSWORD_RULES = [
+  { id: 'length', label: '8–20 characters', test: (p) => p.length >= 8 && p.length <= 20 },
+  { id: 'upper',  label: 'One uppercase letter', test: (p) => /[A-Z]/.test(p) },
+  { id: 'lower',  label: 'One lowercase letter', test: (p) => /[a-z]/.test(p) },
+  { id: 'number', label: 'One number', test: (p) => /[0-9]/.test(p) },
+  { id: 'special', label: 'One special character (!@#$%^&*)', test: (p) => /[!@#$%^&*]/.test(p) },
+];
+
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -16,8 +26,24 @@ const RegistrationForm = () => {
     password: ''
   });
 
+  // Compute which rules pass/fail on every render (cheap — only 5 regex tests)
+  const ruleResults = useMemo(
+    () => PASSWORD_RULES.map((rule) => ({ ...rule, passed: rule.test(formData.password) })),
+    [formData.password]
+  );
+
+  const allRulesPassed = ruleResults.every((r) => r.passed);
+
   async function handleSubmit(e) {
     e.preventDefault();
+
+    // Guard: block submit if password doesn't meet requirements
+    if (!allRulesPassed) {
+      setPasswordTouched(true);
+      setError('Please fix the password requirements below.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -37,6 +63,7 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   }
+
   return (
     <Card glow glowColor="primary">
       <div className="mb-8">
@@ -68,9 +95,33 @@ const RegistrationForm = () => {
           placeholder="••••••••"
           type="password"
           value={formData.password}
-          onChange={(e) => { setFormData({ ...formData, password: e.target.value }) }}
+          onChange={(e) => {
+            setFormData({ ...formData, password: e.target.value });
+            if (!passwordTouched) setPasswordTouched(true);
+          }}
           required
         />
+
+        {/* Real-time password requirements checklist */}
+        {passwordTouched && (
+          <ul className="space-y-1.5 text-sm pl-1 -mt-2">
+            {ruleResults.map((rule) => (
+              <li key={rule.id} className="flex items-center gap-2">
+                <span
+                  className={`material-symbols-outlined text-base transition-colors ${
+                    rule.passed ? 'text-green-400' : 'text-red-400'
+                  }`}
+                >
+                  {rule.passed ? 'check_circle' : 'cancel'}
+                </span>
+                <span className={rule.passed ? 'text-green-400' : 'text-slate-400'}>
+                  {rule.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button className="w-full py-4 mt-4" size="lg" type="submit" disabled={loading}>
           {loading ? 'Sending Code...' : 'Create Account'}
@@ -86,8 +137,6 @@ const RegistrationForm = () => {
           </Link>
         </p>
       </div>
-
-      
     </Card>
   );
 };

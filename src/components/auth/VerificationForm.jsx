@@ -92,12 +92,12 @@ const VerificationForm = () => {
         <p className="text-slate-400">We've sent a 6-digit code to <span className="text-slate-200 font-medium">{email}</span></p>
       </div>
       <div className="space-y-8">
-        <div className="flex justify-between gap-2">
+        <div className="flex gap-2 sm:gap-3">
           {otp.map((val, idx) => (
             <input
               key={idx}
               ref={el => inputRefs.current[idx] = el}
-              className="w-12 h-16 md:w-16 md:h-20 text-center text-2xl font-bold bg-slate-900/50 border-2 border-slate-700 rounded-xl text-accent-emerald emerald-glow focus:outline-none focus:border-accent-emerald transition-all"
+              className="flex-1 min-w-0 aspect-square max-h-20 text-center text-2xl font-bold bg-slate-900/50 border-2 border-slate-700 rounded-xl text-accent-emerald emerald-glow focus:outline-none focus:border-accent-emerald transition-all"
               maxLength="1"
               type="text"
               value={val}
